@@ -1,6 +1,6 @@
 import ClientPage from "./ClientPage";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return [];
 }
 
