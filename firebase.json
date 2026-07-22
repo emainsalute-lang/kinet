@@ -1,0 +1,23 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "kinet/firestore.rules",
+    "indexes": "kinet/firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "kinet/storage.rules"
+  }
+}

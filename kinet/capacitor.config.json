@@ -1,0 +1,1 @@
+{"appId":"com.kinet.app","appName":"Kinet","webDir":"public","bundledWebRuntime":false,"server":{"url":"https://your-kinet-domain.com","cleartext":false},"plugins":{"SplashScreen":{"launchShowDuration":1200,"backgroundColor":"#0c1220","showSpinner":false},"Keyboard":{"resize":"body"}}}
