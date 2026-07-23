@@ -262,7 +262,7 @@ export async function getPhase10Snapshot(): Promise<Phase10Snapshot> {
       id,
       athleteName: String(data.athleteName ?? ""),
       bankName: String(data.bankName ?? ""),
-      checklistStatus: data.checklistStatus === "complete" ? "complete" : "pending",
+      checklistStatus: (data.checklistStatus === "complete" ? "complete" : "pending") as "pending" | "complete",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase10Arrivals", (id, data) => ({
@@ -270,7 +270,7 @@ export async function getPhase10Snapshot(): Promise<Phase10Snapshot> {
       athleteName: String(data.athleteName ?? ""),
       airport: String(data.airport ?? ""),
       arrivalDate: String(data.arrivalDate ?? ""),
-      status: data.status === "arrived" ? "arrived" : "planned",
+      status: (data.status === "arrived" ? "arrived" : "planned") as "planned" | "arrived",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase10Lockers", (id, data) => ({

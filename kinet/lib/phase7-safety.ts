@@ -344,8 +344,7 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       anonymous: Boolean(data.anonymous),
       targetName: String(data.targetName ?? ""),
       summary: String(data.summary ?? ""),
-      severity:
-        data.severity === "low" || data.severity === "high" ? data.severity : "medium",
+      severity: (data.severity === "low" || data.severity === "high" ? data.severity : "medium") as "low" | "medium" | "high",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase7SafeSport", (id, data) => ({
@@ -353,7 +352,7 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       teamId: String(data.teamId ?? ""),
       requirement: String(data.requirement ?? ""),
       ownerName: String(data.ownerName ?? ""),
-      status: data.status === "complete" ? "complete" : "pending",
+      status: (data.status === "complete" ? "complete" : "pending") as "pending" | "complete",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase7BackgroundChecks", (id, data) => ({
@@ -361,8 +360,7 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       teamId: String(data.teamId ?? ""),
       staffName: String(data.staffName ?? ""),
       role: String(data.role ?? ""),
-      status:
-        data.status === "cleared" || data.status === "expired" ? data.status : "pending",
+      status: (data.status === "cleared" || data.status === "expired" ? data.status : "pending") as "pending" | "cleared" | "expired",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase7Onboarding", (id, data) => ({
@@ -385,7 +383,7 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       id,
       facilityName: String(data.facilityName ?? ""),
       memberName: String(data.memberName ?? ""),
-      action: data.action === "check_out" ? "check_out" : "check_in",
+      action: (data.action === "check_out" ? "check_out" : "check_in") as "check_in" | "check_out",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase7EquipmentCheckouts", (id, data) => ({
@@ -394,7 +392,7 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       itemName: String(data.itemName ?? ""),
       assignedTo: String(data.assignedTo ?? ""),
       dueBack: String(data.dueBack ?? ""),
-      status: data.status === "returned" ? "returned" : "out",
+      status: (data.status === "returned" ? "returned" : "out") as "out" | "returned",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase7JerseyAssignments", (id, data) => ({
@@ -411,9 +409,8 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       requesterName: String(data.requesterName ?? ""),
       title: String(data.title ?? ""),
       amountLabel: String(data.amountLabel ?? ""),
-      status:
-        data.status === "approved" || data.status === "denied" ? data.status : "pending",
-      createdAt: mapTimestamp(data, "createdAt"),
+      status: (data.status === "approved" || data.status === "denied" ? data.status : "pending") as "pending" | "approved" | "denied",
+      createdAt: mapTimestamp(data, "createdAt") as FirestoreTimestamp | undefined,
     })),
     getCollection("phase7ExpenseApprovals", (id, data) => ({
       id,
@@ -421,9 +418,8 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       title: String(data.title ?? ""),
       amountLabel: String(data.amountLabel ?? ""),
       approverName: String(data.approverName ?? ""),
-      status:
-        data.status === "approved" || data.status === "rejected" ? data.status : "pending",
-      createdAt: mapTimestamp(data, "createdAt"),
+      status: (data.status === "approved" || data.status === "rejected" ? data.status : "pending") as "pending" | "approved" | "rejected",
+      createdAt: mapTimestamp(data, "createdAt") as FirestoreTimestamp | undefined,
     })),
     getCollection("phase7PurchaseOrders", (id, data) => ({
       id,
@@ -460,8 +456,8 @@ export async function getSafetyHubSnapshot(): Promise<SafetyHubSnapshot> {
       teamId: String(data.teamId ?? ""),
       alertTitle: String(data.alertTitle ?? ""),
       details: String(data.details ?? ""),
-      severity: data.severity === "warning" ? "warning" : "watch",
-      createdAt: mapTimestamp(data, "createdAt"),
+      severity: (data.severity === "warning" ? "warning" : "watch") as "watch" | "warning",
+      createdAt: mapTimestamp(data, "createdAt") as FirestoreTimestamp | undefined,
     })),
     getCollection("phase7Broadcasts", (id, data) => ({
       id,

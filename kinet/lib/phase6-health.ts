@@ -171,7 +171,7 @@ function requireUser() {
   return auth.currentUser;
 }
 
-function mapTimestamp(data: Record<string, unknown>, key: string) {
+function mapTimestamp(data: Record<string, unknown>, key: string): FirestoreTimestamp {
   return (data[key] as FirestoreTimestamp | undefined) ?? null;
 }
 
@@ -321,8 +321,8 @@ export async function getHealthHubSnapshot(): Promise<HealthHubSnapshot> {
       coachName: String(data.coachName ?? ""),
       trigger: String(data.trigger ?? ""),
       recommendation: String(data.recommendation ?? ""),
-      status: data.status === "watch" || data.status === "resolved" ? data.status : "action",
-      createdAt: mapTimestamp(data, "createdAt"),
+      status: (data.status === "watch" || data.status === "resolved" ? data.status : "action") as "watch" | "action" | "resolved",
+      createdAt: mapTimestamp(data, "createdAt") as FirestoreTimestamp | undefined,
     })), [] as CoachInterventionRecord[]),
     safeFetch(getCollection("phase6Warmups", (id, data) => ({
       id,
@@ -342,8 +342,8 @@ export async function getHealthHubSnapshot(): Promise<HealthHubSnapshot> {
       source: String(data.source ?? ""),
       metric: String(data.metric ?? ""),
       valueLabel: String(data.valueLabel ?? ""),
-      severity: data.severity === "low" || data.severity === "high" ? data.severity : "medium",
-      createdAt: mapTimestamp(data, "createdAt"),
+      severity: (data.severity === "low" || data.severity === "high" ? data.severity : "medium") as "low" | "medium" | "high",
+      createdAt: mapTimestamp(data, "createdAt") as FirestoreTimestamp | undefined,
     })), [] as WearableAlertRecord[]),
     safeFetch(getCollection("phase6HeartRateZones", (id, data) => ({
       id,
@@ -391,17 +391,17 @@ export async function getHealthHubSnapshot(): Promise<HealthHubSnapshot> {
       id,
       approverName: String(data.approverName ?? ""),
       phase: String(data.phase ?? ""),
-      status: data.status === "approved" ? "approved" : "pending",
+      status: (data.status === "approved" ? "approved" : "pending") as "pending" | "approved",
       notes: String(data.notes ?? ""),
-      createdAt: mapTimestamp(data, "createdAt"),
+      createdAt: mapTimestamp(data, "createdAt") as FirestoreTimestamp | undefined,
     })), [] as ReturnToPlayApprovalRecord[]),
     safeFetch(getCollection("phase6SpecialistBookings", (id, data) => ({
       id,
-      specialistType: data.specialistType === "nutritionist" ? "nutritionist" : "sports_psych",
+      specialistType: (data.specialistType === "nutritionist" ? "nutritionist" : "sports_psych") as "nutritionist" | "sports_psych",
       specialistName: String(data.specialistName ?? ""),
       scheduledFor: String(data.scheduledFor ?? ""),
       focus: String(data.focus ?? ""),
-      createdAt: mapTimestamp(data, "createdAt"),
+      createdAt: mapTimestamp(data, "createdAt") as FirestoreTimestamp | undefined,
     })), [] as SpecialistBookingRecord[]),
     safeFetch(getSpecialists(), {
       nutritionists: [] as DirectorySpecialistRecord[],

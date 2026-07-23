@@ -144,8 +144,10 @@ export async function getQuietHoursSettings() {
     return { enabled: false, startHour: 22, endHour: 7 } satisfies QuietHoursSettings;
   }
 
+  const currentUser = auth.currentUser;
+
   const snapshot = await getDocs(query(collection(db, "quietHours"), limit(1)));
-  const own = snapshot.docs.find((docSnapshot: { id: string; data: () => Record<string, unknown> }) => (docSnapshot.data() as Record<string, unknown>).userId === auth.currentUser?.uid);
+  const own = snapshot.docs.find((docSnapshot: { id: string; data: () => Record<string, unknown> }) => (docSnapshot.data() as Record<string, unknown>).userId === currentUser.uid);
   if (!own) {
     return { enabled: false, startHour: 22, endHour: 7 } satisfies QuietHoursSettings;
   }

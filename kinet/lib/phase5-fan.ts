@@ -327,8 +327,7 @@ export async function getFanHubSnapshot() {
       itemName: String(data.itemName ?? ""),
       requesterName: String(data.requesterName ?? ""),
       personalization: String(data.personalization ?? ""),
-      status:
-        data.status === "signed" || data.status === "shipped" ? data.status : "pending",
+      status: (data.status === "signed" || data.status === "shipped" ? data.status : "pending") as "pending" | "signed" | "shipped",
       createdAt: mapTimestamp(data, "createdAt"),
     })),
     getCollection("phase5Collectibles", (id, data) => ({

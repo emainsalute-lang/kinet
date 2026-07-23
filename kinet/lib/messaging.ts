@@ -121,6 +121,8 @@ export async function markConversationRead(conversationId: string) {
     return;
   }
 
+  const currentUser = auth.currentUser;
+
   const snapshot = await getDoc(doc(db, "conversations", conversationId));
   if (!snapshot.exists()) {
     return;
@@ -128,14 +130,14 @@ export async function markConversationRead(conversationId: string) {
 
   const data = snapshot.data() as Record<string, unknown>;
   const unreadBy = Array.isArray(data.unreadBy) ? (data.unreadBy as string[]) : [];
-  if (!unreadBy.includes(auth.currentUser.uid)) {
+  if (!unreadBy.includes(currentUser.uid)) {
     return;
   }
 
   await setDoc(
     doc(db, "conversations", conversationId),
     {
-      unreadBy: unreadBy.filter((uid) => uid !== auth.currentUser?.uid),
+      unreadBy: unreadBy.filter((uid) => uid !== currentUser.uid),
     },
     { merge: true }
   );
@@ -146,6 +148,8 @@ export async function setConversationTyping(conversationId: string, isTyping: bo
     return;
   }
 
+  const currentUser = auth.currentUser;
+
   const snapshot = await getDoc(doc(db, "conversations", conversationId));
   if (!snapshot.exists()) {
     return;
@@ -154,8 +158,8 @@ export async function setConversationTyping(conversationId: string, isTyping: bo
   const data = snapshot.data() as Record<string, unknown>;
   const typingBy = Array.isArray(data.typingBy) ? (data.typingBy as string[]) : [];
   const nextTypingBy = isTyping
-    ? Array.from(new Set([...typingBy, auth.currentUser.uid]))
-    : typingBy.filter((uid) => uid !== auth.currentUser?.uid);
+    ? Array.from(new Set([...typingBy, currentUser.uid]))
+    : typingBy.filter((uid) => uid !== currentUser.uid);
 
   await setDoc(
     doc(db, "conversations", conversationId),
@@ -243,12 +247,14 @@ export async function updateConversationState(
     throw new Error("You must be signed in.");
   }
 
+  const currentUser = auth.currentUser;
+
   const snapshot = await getDoc(doc(db, "conversations", conversationId));
   const data = snapshot.exists() ? (snapshot.data() as Record<string, unknown>) : null;
   const current = Array.isArray(data?.[field]) ? (data?.[field] as string[]) : [];
   const nextValues = enabled
-    ? Array.from(new Set([...current, auth.currentUser.uid]))
-    : current.filter((uid) => uid !== auth.currentUser?.uid);
+    ? Array.from(new Set([...current, currentUser.uid]))
+    : current.filter((uid) => uid !== currentUser.uid);
 
   await setDoc(doc(db, "conversations", conversationId), { [field]: nextValues }, { merge: true });
 }
@@ -339,8 +345,10 @@ export function subscribeToConversationMessages(
     return () => undefined;
   }
 
+  const firestore = db;
+
   const messagesQuery = query(
-    collection(db, "messages"),
+    collection(firestore, "messages"),
     where("conversationId", "==", conversationId),
     orderBy("createdAt", "asc"),
     limit(100)
@@ -369,17 +377,18 @@ export function subscribeToConversationMessages(
       callback(nextMessages);
 
       if (auth?.currentUser) {
+        const currentUser = auth.currentUser;
         await Promise.all(
           nextMessages
             .filter(
               (message) =>
-                message.senderId !== auth.currentUser?.uid &&
-                !message.readBy.includes(auth.currentUser.uid)
+                message.senderId !== currentUser.uid &&
+                !message.readBy.includes(currentUser.uid)
             )
             .map((message) =>
               setDoc(
-                doc(db, "messages", message.id),
-                { readBy: [...message.readBy, auth.currentUser!.uid] },
+                doc(firestore, "messages", message.id),
+                { readBy: [...message.readBy, currentUser.uid] },
                 { merge: true }
               )
             )

@@ -196,10 +196,11 @@ export async function getMyShowcaseRegistrations() {
 
 export async function issueEventTicket(eventId: string, holderName: string, email: string) {
   const user = assertSignedIn();
+  const displayName = user.displayName || "Kinet Guest";
   await addDoc(collection(db!, "eventTickets"), {
     eventId,
     userId: user.uid,
-    holderName: holderName.trim() || auth.currentUser?.displayName || "Kinet Guest",
+    holderName: holderName.trim() || displayName,
     email: email.trim(),
     qrCode: `HL-${eventId}-${user.uid.slice(0, 8)}-${Date.now()}`,
     checkedIn: false,
